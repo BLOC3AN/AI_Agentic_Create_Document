@@ -1,0 +1,11 @@
+gspread
+oauth2client
+python-dotenv
+langchain
+langchain-google-genai
+faiss-cpu
+openai
+langchain_community
+tiktoken
+unstructured # .md
+markdown

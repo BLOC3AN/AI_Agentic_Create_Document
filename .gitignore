@@ -1,0 +1,7 @@
+*__pycache__
+*.env
+*.pyc
+
+/tools
+/__pycache__
+/.env

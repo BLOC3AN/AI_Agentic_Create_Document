@@ -1,0 +1,22 @@
+Bố cục của một document Markdown thường bắt đầu bằng tiêu đề chính (h1), tiếp theo là các tiêu đề phụ (h2, h3, ...), đoạn văn bản chính, và các yếu tố định dạng như danh sách, bảng, hình ảnh, và các đoạn mã. 
+Các thành phần chính:
+Tiêu đề:
+Tiêu đề chính (h1) thường là tiêu đề đầu tiên và nên giống hoặc gần giống tên tệp.
+Các tiêu đề phụ (h2, h3, ...) được tạo bằng cách sử dụng dấu # ở đầu dòng, số lượng dấu # tương ứng với cấp độ tiêu đề (ví dụ: ## Tiêu đề cấp 2).
+Đoạn văn bản chính:
+Đoạn văn bản chính được viết bằng văn bản thuần túy, được định dạng bằng các ký hiệu Markdown.
+Danh sách:
+Danh sách không dấu (unordered list): sử dụng dấu *, +, hoặc - ở đầu dòng để tạo các mục danh sách.
+Danh sách có dấu (ordered list): sử dụng số tự nhiên và dấu chấm ở đầu dòng.
+Bảng:
+Tạo bảng bằng cách sử dụng dấu | để phân tách các cột và dấu - để tạo các hàng.
+Hình ảnh:
+Thêm hình ảnh bằng cách sử dụng cú pháp !alt text.
+Đoạn mã:
+Tạo đoạn mã trực tiếp trong văn bản bằng cách sử dụng các ký hiệu như backticks (`` ` ``).
+Tạo đoạn mã đa dòng bằng cách sử dụng 3 backticks (`` ``` `).
+Các yếu tố định dạng khác:
+In đậm (bold) bằng cách sử dụng dấu ** hoặc __.
+In nghiêng (italic) bằng cách sử dụng dấu * hoặc _.
+Tạo liên kết bằng cách sử dụng cú pháp link text.
+Khung văn bản bằng cách sử dụng cú pháp > Quote. 
