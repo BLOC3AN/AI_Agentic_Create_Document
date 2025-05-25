@@ -11,9 +11,9 @@ tool_llm = ChatOpenAI(model_name="gpt-4o-mini", top_p=0.85, temperature=0.3)
 # Đăng ký tools
 tools = [
     Tool(
-        name="retrieve_knowledge", 
+        name="retrieve_knowledge", s
         func=retrieve_knowledge, 
-        description="Lấy kiến thức liên quan từ docs"),
+        description="Lấy kiến thức liên quan từ các nguồn tham khảo"),
     Tool(
         name="analyze_code", 
         func=analyze_code, 
