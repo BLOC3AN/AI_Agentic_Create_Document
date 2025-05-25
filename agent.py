@@ -11,7 +11,7 @@ tool_llm = ChatOpenAI(model_name="gpt-4o-mini", top_p=0.85, temperature=0.3)
 # Đăng ký tools
 tools = [
     Tool(
-        name="retrieve_knowledge", s
+        name="retrieve_knowledge", 
         func=retrieve_knowledge, 
         description="Lấy kiến thức liên quan từ các nguồn tham khảo"),
     Tool(
@@ -25,7 +25,13 @@ tools = [
     Tool(
         name="save_file",
         func=save_file,
-        description="Lưu nội dung Markdown tương ứng nhận từ write_doc. Trả về đường dẫn file đã lưu"
+        description="""Lưu nội dung dạng Markdown vào một tệp.
+        Công cụ này yêu cầu 2 đối số:
+        1. 'markdown': Nội dung tài liệu dưới dạng chuỗi Markdown cần lưu.
+        2. 'file_name': Tên của tệp mà bạn muốn lưu tài liệu vào (không cần thêm đuôi .md, công cụ sẽ tự thêm).ví dụ summary_document
+        Hãy sử dụng công cụ này khi bạn đã hoàn thành việc tạo tài liệu Markdown và muốn lưu nó lại.
+        ví dụ: save_file(markdown = #... , file_name='summary_code')
+        """,
 ),
 ]
 
