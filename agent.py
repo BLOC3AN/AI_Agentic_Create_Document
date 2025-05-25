@@ -6,7 +6,7 @@ from tools.write import write_doc
 from tools.save import save_file
 
 # Khởi tạo LLM
-tool_llm = ChatOpenAI(model_name="gpt-4o-mini", top_p=0.85, temperature=0.3)
+tool_llm = ChatOpenAI(model_name="gpt-4.1-mini", top_p=0.85, temperature=0.3)
 
 # Đăng ký tools
 tools = [

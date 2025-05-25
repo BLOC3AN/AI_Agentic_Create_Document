@@ -27,9 +27,9 @@ if __name__ == "__main__":
         Khi bạn cần sử dụng một công cụ, bạn PHẢI tạo ra một `Action` và `Action Input`.
         `Action Input` PHẢI là một chuỗi JSON hợp lệ.
         Ví dụ về cách bạn nên gọi công cụ save_file:
-        Action: save_file
-        Action Input: {{"markdown": "Nội dung tài liệu của tôi...", "file_name": "ten_tai_lieu"}}
-        Luôn kết thúc nhiệm vụ bằng Final Answer.
+            Action: save_file
+            Action Input: {{"markdown": "Nội dung tài liệu của tôi...", "file_name": "ten_tai_lieu"}}
+        **Luôn kết thúc nhiệm vụ bằng Final Answer và đảm bảo lưu file thành công**
     """)
     result = agent.run(prompt)
     print("Kết quả:", result)
