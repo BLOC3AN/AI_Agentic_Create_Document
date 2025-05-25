@@ -89,3 +89,13 @@ Dưới đây là danh sách các hàm chính được sử dụng trong mã:
 ## Kết Luận
 
 Mã code này thiết lập một hệ thống có khả năng xử lý và trình bày thông tin một cách hiệu quả thông qua các hàm và công cụ đã được định nghĩa. Điều này giúp người dùng dễ dàng truy cập và hiểu rõ hơn về các khái niệm trong mã.
+
+# Run Code
+- Activate VirtualEnviroment 
+```bash
+source ./agent2agent/bin/activate
+```
+- Run agent
+```bash
+python3 main.py
+```
