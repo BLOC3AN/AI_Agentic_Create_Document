@@ -16,157 +16,76 @@ project_root/
 └── main.py               # Script chạy ví dụ (import agent từ agent.py)
 ```
 ---
-## File: docs/reference.txt
-```
-# Thư mục này chứa tài liệu hướng dẫn, best practices, ví dụ code, ...
 
-# Ví dụ:
+# Phân Tích Mã Code
 
-Python recursion uses call stack. For factorial, use base case n==0.
-Describe how AST parsing works in Python.
+Mã code này khởi tạo một agent thông minh sử dụng mô hình ngôn ngữ ChatOpenAI và một loạt các công cụ để xử lý kiến thức, phân tích mã, viết tài liệu và lưu file.
 
-````
+## Tổng Quan về Các Thành Phần
 
-## File: tools/retrieve.py
+### 1. Mô Hình Ngôn Ngữ (tool_llm)
 
-```python
-from typing import List
-from langchain.document_loaders import TextLoader
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import FAISS
+- **Mô tả**: Mô hình ngôn ngữ được sử dụng bởi agent, cụ thể là mô hình GPT-4o-mini. Các tham số `top_p` và `temperature` được điều chỉnh để kiểm soát tính ngẫu nhiên trong phản hồi.
 
-# Tạo retriever khi import module
-loader = TextLoader("./docs/reference.txt")
-docs = loader.load()
-splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-chunks = splitter.split_documents(docs)
-embeddings = OpenAIEmbeddings()
-vectorstore = FAISS.from_documents(chunks, embeddings)
-retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
+### 2. Danh Sách Các Công Cụ (tools)
 
+- **Mô tả**: Danh sách các công cụ được đăng ký, mỗi công cụ có một chức năng riêng biệt phục vụ cho các hoạt động trong quy trình xử lý.
 
-def retrieve_knowledge(query: str) -> List[str]:
-    """Lấy các đoạn văn bản liên quan đến truy vấn."""
-    results = retriever.get_relevant_documents(query)
-    return [doc.page_content for doc in results]
-````
+#### Các Công Cụ Được Sử Dụng
 
-## File: tools/analyze.py
+| Tên Công Cụ          | Mục Đích                                                                                       |
+|----------------------|------------------------------------------------------------------------------------------------|
+| `retrieve_knowledge` | Lấy thông tin từ tài liệu để hỗ trợ trong việc trả lời câu hỏi hoặc cung cấp thông tin bổ sung. |
+| `analyze_code`      | Phân tích mã nguồn để hiểu rõ hơn về chức năng và cấu trúc của mã, và chuẩn bị nội dung cho tài liệu. |
+| `write_doc`         | Chuyển đổi nội dung phân tích thành định dạng Markdown, giúp cho việc trình bày thông tin trở nên dễ đọc hơn. |
+| `save_file`         | Lưu nội dung Markdown vào một file, cho phép người dùng dễ dàng truy cập và chia sẻ tài liệu. |
 
-```python
-from typing import Any, Dict, List
-from langchain.chat_models import ChatOpenAI
+### 3. Agent
 
-llm = ChatOpenAI(model_name="gpt-4o-mini")
+- **Mô tả**: Agent được khởi tạo với khả năng xử lý thông tin một cách tự động và linh hoạt, có khả năng phản hồi với thông tin chi tiết nếu được yêu cầu.
 
-def analyze_code(code: str, context: List[str]) -> Dict[str, Any]:
-    """Phân tích code kết hợp context và LLM, trả về JSON."""
-    prompt = (
-        "Bạn là chuyên gia Python. Dưới đây là code và kiến thức tham khảo:
-"
-        f"Context:
-{context}
-Code:
-{code}
-"
-        "Hãy phân tích chi tiết và trả về JSON với keys: functions, analysis."
-    )
-    resp = llm.call_as_llm([{"role": "user", "content": prompt}])
-    # Kết quả là một chuỗi JSON, parse nó nếu cần
-    return resp
-```
+## Các Hàm Chính
 
-## File: tools/write.py
+Dưới đây là danh sách các hàm chính được sử dụng trong mã:
 
-```python
-from typing import List
-from langchain.chat_models import ChatOpenAI
+### 1. `initialize_agent`
 
-llm = ChatOpenAI(model_name="gpt-4o-mini")
+- **Mô tả**: Khởi tạo một agent với các công cụ và mô hình ngôn ngữ đã cho.
+- **Tham số**:
+  - `tools`: Danh sách các công cụ được đăng ký để agent sử dụng.
+  - `tool_llm`: Mô hình ngôn ngữ được sử dụng bởi agent.
+  - `agent`: Loại agent (ví dụ như 'zero-shot-react-description').
+  - `handle_parsing_errors`: Biến boolean cho biết agent có nên xử lý lỗi phân tích hay không.
+  - `verbose`: Biến boolean cho biết có nên in thông tin chi tiết ra console hay không.
 
-def write_doc(analysis: str, context: List[str]) -> str:
-    """Tạo Markdown từ analysis và context."""
-    prompt = (
-        "Bạn là technical writer. Kết hợp analysis và context để tạo Markdown đầy đủ:
-"
-        f"Context:
-{context}
-Analysis:
-{analysis}
-"
-    )
-    resp = llm.call_as_llm([{"role": "user", "content": prompt}])
-    return resp
-```
+### 2. `Tool`
 
-## File: tools/save.py
+- **Mô tả**: Lớp đại diện cho các công cụ mà agent có thể sử dụng.
+- **Tham số**:
+  - `name`: Tên của công cụ.
+  - `func`: Hàm thực hiện chức năng của công cụ.
+  - `description`: Mô tả ngắn gọn về công cụ.
 
-```python
-import time
+### 3. `retrieve_knowledge`
 
-def save_file(markdown: str) -> str:
-    """Lưu markdown vào file và trả về đường dẫn."""
-    filename = f"output_{int(time.time())}.md"
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(markdown)
-    return filename
-```
+- **Mô tả**: Hàm lấy kiến thức liên quan từ tài liệu.
+- **Tham số**: Không có.
 
-## File: agent.py
+### 4. `analyze_code`
 
-```python
-from langchain.agents import initialize_agent, Tool
-from langchain.chat_models import ChatOpenAI
-from tools.retrieve import retrieve_knowledge
-from tools.analyze import analyze_code
-from tools.write import write_doc
-from tools.save import save_file
+- **Mô tả**: Hàm phân tích mã và trả về nội dung dưới dạng markdown chuẩn.
+- **Tham số**: Không có.
 
-# Khởi tạo LLM
-tool_llm = ChatOpenAI(model_name="gpt-4o-mini")
+### 5. `write_doc`
 
-# Đăng ký tools
-tools = [
-    Tool(name="retrieve_knowledge", func=retrieve_knowledge, description="Lấy kiến thức liên quan từ docs"),
-    Tool(name="analyze_code", func=analyze_code, description="Phân tích code với context"),
-    Tool(name="write_doc", func=write_doc, description="Chuyển analysis thành Markdown"),
-    Tool(name="save_file", func=save_file, description="Lưu Markdown vào file")
-]
+- **Mô tả**: Hàm chuyển đổi phân tích thành định dạng Markdown.
+- **Tham số**: Không có.
 
-# Tạo agent
-tag_agent = initialize_agent(
-    tools,
-    tool_llm,
-    agent="zero-shot-react-description",
-    verbose=True
-)
-```
+### 6. `save_file`
 
-## File: main.py
+- **Mô tả**: Hàm lưu nội dung Markdown vào file và trả về đường dẫn đến file đã lưu.
+- **Tham số**: Không có.
 
-```python
-from agent import tag_agent as agent
-from tools.retrieve import retrieve_knowledge
+## Kết Luận
 
-if __name__ == "__main__":
-    code_sample = '''
-# Tính giai thừa
-def factorial(n):
-    if n == 0:
-        return 1
-    return n * factorial(n-1)
-    '''
-
-    # 1. Lấy context
-    ctx = retrieve_knowledge("Python recursion patterns and factorial implementation")
-
-    # 2. Gửi prompt
-    prompt = (
-        "Phân tích code sau, dùng context để cải thiện độ chính xác, " 
-        "viết tài liệu và lưu file:
-" + code_sample
-    )
-    result = agent.run(prompt)
-    print("Kết quả:", result)
-```
+Mã code này thiết lập một hệ thống có khả năng xử lý và trình bày thông tin một cách hiệu quả thông qua các hàm và công cụ đã được định nghĩa. Điều này giúp người dùng dễ dàng truy cập và hiểu rõ hơn về các khái niệm trong mã.
