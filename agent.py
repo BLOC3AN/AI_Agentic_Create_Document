@@ -4,9 +4,12 @@ from tools.retrieve import retrieve_knowledge
 from tools.analyze import analyze_code
 from tools.write import write_doc
 from tools.save import save_file
+from functools import partial
 
 # Khởi tạo LLM
 tool_llm = ChatOpenAI(model_name="gpt-4.1-mini", top_p=0.85, temperature=0.3)
+# Gói hàm write_doc với LLM đã có sẵn
+
 
 # Đăng ký tools
 tools = [
