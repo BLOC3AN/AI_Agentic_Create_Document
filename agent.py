@@ -1,6 +1,6 @@
 from langchain.agents import initialize_agent, Tool
 from langchain_community.chat_models import ChatOpenAI #type:ignore
-from tools.retrieve import retrieve_knowledge
+from tools.retrieve import RetriveKnowledge  #retrieve_knowledge
 from tools.analyze import analyze_code
 from tools.write import write_doc
 from tools.save import save_file
@@ -15,7 +15,7 @@ tool_llm = ChatOpenAI(model_name="gpt-4.1-mini", top_p=0.85, temperature=0.3)
 tools = [
     Tool(
         name="retrieve_knowledge", 
-        func=retrieve_knowledge, 
+        func=RetriveKnowledge().retrieve_knowledge,#retrieve_knowledge, 
         description="Lấy kiến thức liên quan từ các nguồn tham khảo"),
     Tool(
         name="analyze_code", 

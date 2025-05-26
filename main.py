@@ -5,7 +5,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 
 from agent import tag_agent as agent
-from tools.retrieve import retrieve_knowledge
+from tools.retrieve import RetriveKnowledge  #retrieve_knowledge
 
 def run_agent():
     return 
@@ -15,7 +15,7 @@ if __name__ == "__main__":
         code_sample = f.read()
 
     # 1. Lấy context
-    ctx = retrieve_knowledge("""Bạn là một chuyên gia về viết document và 
+    ctx = RetriveKnowledge().retrieve_knowledge("""Bạn là một chuyên gia về viết document và 
                              trình bày dạng mardown với từng suy luận logic bám sát tài liệu 
                              để do người dùng dễ dàng đọc tài liệu của bạn viết""")
 
