@@ -23,7 +23,7 @@ if not OPENAI_API_KEY:
 
 llm = ChatOpenAI(
     model="gpt-4o-mini",
-    openai_api_key=OPENAI_API_KEY
+    openai_api_key=OPENAI_API_KEY #type:ignore
 )
 
 def load_code_file(file_path: str) -> str:
@@ -101,7 +101,7 @@ def write_doc(analysis: str) -> str:
     )
     try:
         response = llm.invoke([HumanMessage(content=prompt)])
-        return response.content
+        return response.content #type:ignore
     except Exception as e:
         logger.error(f"Error writing documentation: {e}")
         return f"Error generating documentation: {str(e)}"
